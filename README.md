@@ -1,4 +1,4 @@
-# SALMA-ML-BE
+# salma-ml-be
 
 **Sistem Backend Machine Learning untuk Evaluasi Performa Siswa TPQ menggunakan FastAPI dan Random Forest**
 
