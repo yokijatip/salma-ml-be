@@ -14,16 +14,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Model file (jika besar, lebih baik exclude)
-student_model.pkl
-
 # Editor
 .vscode/
 .idea/
 
-venv/
-__pycache__/
 *.pyc
-*.pkl
 sql_app.db
 
