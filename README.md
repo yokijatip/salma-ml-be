@@ -147,3 +147,16 @@ uvicorn app.main:app --reload
 Akses via browser:
 Swagger UI: http://127.0.0.1:8000/docs#/
 
+---
+
+## 📝 Catatan
+- Ubah SECRET_KEY di file auth.py sebelum production
+- Jangan upload student_model.pkl besar ke GitHub
+- Tambahkan .env file jika nanti butuh config dinamis
+
+---
+
+## 📮 Kontak
+| Dibuat oleh Yoki Jati Perkasa – Mahasiswa STMIK Mardira Indonesia
+| Proyek JOKI: Evaluasi Siswa TPQ Berbasis Machine Learning
+| Tahun 2025
