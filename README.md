@@ -28,6 +28,7 @@ Proyek ini adalah backend berbasis Python (FastAPI) yang memanfaatkan algoritma 
 
 ## 🧱 Struktur Proyek
 
+```
 app/
 ├── main.py # Entry point FastAPI dan semua endpoint
 ├── auth.py # Autentikasi dan token JWT
@@ -40,6 +41,7 @@ app/
 ├── student_model.pkl # Model terlatih (binary)
 ├── sample_dataset.csv # Dataset dummy hasil generate
 ├── tpq_dataset.csv # Dataset asli TPQ
+```
 
 
 ---
@@ -137,3 +139,11 @@ pip install -r requirements.txt
 ```bash
 python app/train_model.py
 ```
+### 5. Jalnkan API Server
+```bash
+uvicorn app.main:app --reload
+```
+
+Akses via browser:
+Swagger UI: http://127.0.0.1:8000/docs#/
+
