@@ -45,26 +45,46 @@ class UserResponse(BaseModel):
 
 class StudentBase(BaseModel):
     name: str
-    nilai_1: int
-    nilai_2: int
-    nilai_3: int
-    nilai_4: int
+    kelas: str
+    al_quran_iqro: int
+    hafalan_surat_pendek: int
+    hafalan_doa: int
+    hafalan_ayat_pilihan: int
+    bahasa_arab: int
+    bahasa_inggris: int
+    khat_menulis: int
+    menggambar_mewarnai: int
+    jasmani_kesehatan: int
+    kreativitas_keaktifan: int
+    ulumul_quran: int
+    kemampuan_berbahasa: int
 
 class StudentCreate(StudentBase):
     orang_tua_id: int
 
+
 class StudentResponse(StudentBase):
     id: int
+    rata_rata: float
+    kategori: str
     orang_tua_id: int
 
     class Config:
         orm_mode = True
 
 class PredictRequest(BaseModel):
-    nilai_1: int
-    nilai_2: int
-    nilai_3: int
-    nilai_4: int
+    al_quran_iqro: int
+    hafalan_surat_pendek: int
+    hafalan_doa: int
+    hafalan_ayat_pilihan: int
+    bahasa_arab: int
+    bahasa_inggris: int
+    khat_menulis: int
+    menggambar_mewarnai: int
+    jasmani_kesehatan: int
+    kreativitas_keaktifan: int
+    ulumul_quran: int
+    kemampuan_berbahasa: int
 
 class PredictResponse(BaseModel):
     kategori: str
@@ -88,6 +108,41 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+
+def calculate_average_and_category(student_data):
+    """
+    Menghitung rata-rata dan kategori berdasarkan 12 mata pelajaran
+    """
+    # Ambil semua nilai mata pelajaran (exclude name, kelas, orang_tua_id)
+    subjects = [
+        student_data.al_quran_iqro,
+        student_data.hafalan_surat_pendek,
+        student_data.hafalan_doa,
+        student_data.hafalan_ayat_pilihan,
+        student_data.bahasa_arab,
+        student_data.bahasa_inggris,
+        student_data.khat_menulis,
+        student_data.menggambar_mewarnai,
+        student_data.jasmani_kesehatan,
+        student_data.kreativitas_keaktifan,
+        student_data.ulumul_quran,
+        student_data.kemampuan_berbahasa
+    ]
+    
+    # Hitung rata-rata
+    rata_rata = sum(subjects) / len(subjects)
+    
+    # Tentukan kategori
+    if rata_rata >= 85:
+        kategori = "BSB"
+    elif rata_rata >= 70:
+        kategori = "BSH"
+    elif rata_rata >= 60:
+        kategori = "MB"
+    else:
+        kategori = "BB"
+    
+    return round(rata_rata, 2), kategori
 
 
 # Register
@@ -124,7 +179,16 @@ from typing import List
 def create_student(student: StudentCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Hanya admin yang bisa menambah data siswa")
-    new_student = models.Student(**student.dict())
+    
+    # Hitung rata-rata dan kategori
+    rata_rata, kategori = calculate_average_and_category(student)
+    
+    # Buat student baru
+    student_dict = student.dict()
+    student_dict["rata_rata"] = rata_rata
+    student_dict["kategori"] = kategori
+    
+    new_student = models.Student(**student_dict)
     db.add(new_student)
     db.commit()
     db.refresh(new_student)
@@ -158,8 +222,16 @@ def update_student(id: int, updated: StudentBase, db: Session = Depends(get_db),
     if not student:
         raise HTTPException(status_code=404, detail="Siswa tidak ditemukan")
 
+    # Hitung rata-rata dan kategori yang baru
+    rata_rata, kategori = calculate_average_and_category(updated)
+    
+    # Update semua field
     for key, value in updated.dict().items():
         setattr(student, key, value)
+    
+    # Set rata-rata dan kategori
+    student.rata_rata = rata_rata
+    student.kategori = kategori
 
     db.commit()
     db.refresh(student)
@@ -182,5 +254,18 @@ def delete_student(id: int, db: Session = Depends(get_db), current_user: models.
 # Fungsi untuk melakukan prediksi
 @app.post("/predict", response_model=PredictResponse)
 def predict(data: PredictRequest, current_user: models.User = Depends(get_current_user)):
-    result = predict_performance(data.nilai_1, data.nilai_2, data.nilai_3, data.nilai_4)
+    result = predict_performance(
+        data.al_quran_iqro,
+        data.hafalan_surat_pendek,
+        data.hafalan_doa,
+        data.hafalan_ayat_pilihan,
+        data.bahasa_arab,
+        data.bahasa_inggris,
+        data.khat_menulis,
+        data.menggambar_mewarnai,
+        data.jasmani_kesehatan,
+        data.kreativitas_keaktifan,
+        data.ulumul_quran,
+        data.kemampuan_berbahasa
+    )
     return {"kategori": result}
