@@ -20,3 +20,10 @@ student_model.pkl
 # Editor
 .vscode/
 .idea/
+
+venv/
+__pycache__/
+*.pyc
+*.pkl
+sql_app.db
+
