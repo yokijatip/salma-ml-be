@@ -108,8 +108,8 @@ Model menggunakan algoritma **Random Forest Classifier** berdasarkan 12 nilai si
 
 ## 📊 Evaluasi Model
 
-- Akurasi model ditampilkan melalui script `test_model.py` & `evaluate_model.py`
-- Visualisasi confusion matrix tersimpan di `confusion_matrix.png`
+- Akurasi model ditampilkan melalui script `test_model.py`
+- Visualisasi confusion matrix tersimpan di folder visualizations
 - Dapat ditampilkan ke admin melalui dashboard/endpoint terpisah
 
 ---
