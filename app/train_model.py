@@ -68,7 +68,7 @@ def train_model_with_csv(csv_file_path):
         print(classification_report(y_test, y_pred))
         
         # Simpan model
-        with open("student_model.pkl", "wb") as f:
+        with open("app/student_model.pkl", "wb") as f:
             pickle.dump(model, f)
         
         print("Model berhasil disimpan ke app/student_model.pkl")
@@ -136,8 +136,8 @@ def create_sample_data():
 
 if __name__ == "__main__":
     # Path ke dataset CSV Anda
-    csv_path = "tpq_dataset.csv"  # Jika di root project
-    # csv_path = "app/dataset.csv"  # Jika di folder app/
+    # csv_path = "tpq_dataset.csv"  # Jika di root project
+    csv_path = "app/tpq_dataset.csv"  # Jika di folder app/
     
     # Coba load dataset CSV Anda
     try:

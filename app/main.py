@@ -4,7 +4,7 @@ from .database import Base, engine, SessionLocal
 from . import models, auth
 from pydantic import BaseModel
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import Depends, HTTPException, status
+from fastapi import status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from typing import List

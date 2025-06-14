@@ -37,5 +37,5 @@ def check_dataset(csv_path):
         return False
 
 if __name__ == "__main__":
-    csv_path = "tpq_dataset.csv"  # Sesuaikan dengan lokasi file Anda
+    csv_path = "app/tpq_dataset.csv"  # Sesuaikan dengan lokasi file Anda
     check_dataset(csv_path)
