@@ -9,6 +9,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from typing import List
 from .ml_model import predict_performance
+from typing import List
 
 # Untuk menjalankan server local menggunakan uvicorn 
 # uvicorn app.main:app --reload
@@ -172,7 +173,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 def read_users_me(current_user: models.User = Depends(get_current_user)):
     return current_user
 
-from typing import List
+
 
 # Fungsi untuk membuat data siswa
 @app.post("/students", response_model=StudentResponse)
