@@ -9,6 +9,9 @@ class User(Base):
     hashed_password = Column(String)
     role = Column(String)  # admin atau orang_tua
 
+
+
+# Table untuk menyimpan data Siswa
 class Student(Base):
     __tablename__ = "students"
 
@@ -38,3 +41,21 @@ class Student(Base):
     orang_tua_id = Column(Integer, ForeignKey("users.id"))
 
     orang_tua = relationship("User")
+
+# Table untuk menyimpan informasi kegiatan
+class Kegiatan(Base):
+    __tablename__ = "kegiatan"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nama_kegiatan = Column(String, index=True)
+    deskripsi = Column(String)
+    tanggal = Column(String)  # Format YYYY-MM-DD
+    kelas = Column(String)  # Kelas yang mengikuti kegiatan
+    waktu_mulai = Column(String)  # Format HH:MM
+    waktu_selesai = Column(String)  # Format HH:MM
+    lokasi = Column(String)
+    fotoKegiatan = Column(String)  # URL atau path ke foto kegiatan
+
+    # Foreign key untuk mengaitkan dengan User (admin)
+    admin_id = Column(Integer, ForeignKey("users.id"))
+    admin = relationship("User")  # Relasi ke User sebagai admin kegiatan

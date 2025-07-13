@@ -90,6 +90,35 @@ class PredictRequest(BaseModel):
 class PredictResponse(BaseModel):
     kategori: str
 
+# Kegiatan schemas
+class KegiatanBase(BaseModel):
+    nama_kegiatan: str
+    deskripsi: str
+    tanggal: str  # Format YYYY-MM-DD
+    kelas: str  # Kelas yang mengikuti kegiatan
+    waktu_mulai: str  # Format HH:MM
+    waktu_selesai: str  # Format HH:MM
+    lokasi: str
+    fotoKegiatan: str  # URL atau path ke foto kegiatan
+
+# Create Kegiatan
+class KegiatanCreate(KegiatanBase):
+    pass
+
+class KegiatanResponse(KegiatanBase):
+    id: int
+    pass
+
+    class Config:
+        orm_mode = True
+
+class KegiatanListResponse(BaseModel):
+    kegiatan: List[KegiatanResponse]
+
+    class Config:
+        orm_mode = True
+
+
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> models.User:
     credentials_exception = HTTPException(
@@ -251,6 +280,66 @@ def delete_student(id: int, db: Session = Depends(get_db), current_user: models.
     db.delete(student)
     db.commit()
     return {"message": "Data siswa berhasil dihapus"}
+
+# Fungsi untuk membuat kegiatan
+@app.post("/kegiatan", response_model=KegiatanResponse)
+def create_kegiatan(kegiatan: KegiatanCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Hanya admin yang bisa menambah kegiatan")
+    
+    new_kegiatan = models.Kegiatan(**kegiatan.dict(), admin_id=current_user.id)
+    db.add(new_kegiatan)
+    db.commit()
+    db.refresh(new_kegiatan)
+    return new_kegiatan
+
+# Fungsi untuk mengambil semua kegiatan
+@app.get("/kegiatan", response_model=KegiatanListResponse)
+def get_kegiatan(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    kegiatan_list = db.query(models.Kegiatan).all()
+    return {"kegiatan": kegiatan_list}
+
+
+# Fungsi untuk mengambil kegiatan berdasarkan ID
+@app.get("/kegiatan/{id}", response_model=KegiatanResponse)
+def get_kegiatan_by_id(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    kegiatan = db.query(models.Kegiatan).filter(models.Kegiatan.id == id).first()
+    if not kegiatan:
+        raise HTTPException(status_code=404, detail="Kegiatan tidak ditemukan")
+    return kegiatan
+
+# Fungsi untuk mengupdate kegiatan
+@app.put("/kegiatan/{id}", response_model=KegiatanResponse)
+def update_kegiatan(id: int, updated: KegiatanBase, db: Session = Depends
+(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Hanya admin yang bisa mengedit kegiatan")
+
+    kegiatan = db.query(models.Kegiatan).filter(models.Kegiatan.id == id).first()
+    if not kegiatan:
+        raise HTTPException(status_code=404, detail="Kegiatan tidak ditemukan")
+
+    for key, value in updated.dict().items():
+        setattr(kegiatan, key, value)
+
+    db.commit()
+    db.refresh(kegiatan)
+    return kegiatan
+
+# Fungsi untuk menghapus kegiatan
+@app.delete("/kegiatan/{id}")
+def delete_kegiatan(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Hanya admin yang bisa menghapus kegiatan")
+
+    kegiatan = db.query(models.Kegiatan).filter(models.Kegiatan.id == id).first()
+    if not kegiatan:
+        raise HTTPException(status_code=404, detail="Kegiatan tidak ditemukan")
+
+    db.delete(kegiatan)
+    db.commit()
+    return {"message": "Kegiatan berhasil dihapus"}
+
 
 # Fungsi untuk melakukan prediksi
 @app.post("/predict", response_model=PredictResponse)
