@@ -118,6 +118,34 @@ class KegiatanListResponse(BaseModel):
     class Config:
         orm_mode = True
 
+# Pengumuman schemas
+class PengumumanBase(BaseModel):
+    nama_pengumuman: str
+    deskripsi: str
+    tanggal: str  # Format YYYY-MM-DD
+    kelas: str  # Kelas yang mengikuti kegiatan
+    waktu_mulai: str  # Format HH:MM
+    waktu_selesai: str  # Format HH:MM
+    lokasi: str
+    fotoPengumuman: str  # URL atau path ke foto kegiatan
+
+# Create Kegiatan
+class PengumumanCreate(PengumumanBase):
+    pass
+
+class PengumumanResponse(PengumumanBase):
+    id: int
+    pass
+
+    class Config:
+        orm_mode = True
+
+class PengumumanListResponse(BaseModel):
+    pengumuman: List[PengumumanResponse]
+
+    class Config:
+        orm_mode = True
+
 
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> models.User:
@@ -339,6 +367,93 @@ def delete_kegiatan(id: int, db: Session = Depends(get_db), current_user: models
     db.delete(kegiatan)
     db.commit()
     return {"message": "Kegiatan berhasil dihapus"}
+
+# Pengumuman CRUD
+# Fungsi untuk membuat Pengumuman
+@app.post("/pengumuman", response_model=PengumumanResponse)
+def create_pengumuman(
+    pengumuman: PengumumanCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=403, detail="Hanya admin yang bisa menambah pengumuman"
+        )
+
+    new_pengumuman = models.Pengumuman(**pengumuman.dict(), admin_id=current_user.id)
+    db.add(new_pengumuman)
+    db.commit()
+    db.refresh(new_pengumuman)
+    return new_pengumuman
+
+
+# Fungsi untuk mengambil semua Pengumuman
+@app.get("/pengumuman", response_model=PengumumanListResponse)
+def get_pengumuman(
+    db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)
+):
+    pengumuman_list = db.query(models.Pengumuman).all()
+    return {"pengumuman": pengumuman_list}
+
+
+# Fungsi untuk mengambil Pengumuman berdasarkan ID
+@app.get("/pengumuman/{id}", response_model=PengumumanResponse)
+def get_pengumuman_by_id(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    pengumuman = db.query(models.Pengumuman).filter(models.Pengumuman.id == id).first()
+    if not pengumuman:
+        raise HTTPException(status_code=404, detail="pengumuman tidak ditemukan")
+    return pengumuman
+
+
+# Fungsi untuk mengupdate Pengumuman
+@app.put("/pengumuman/{id}", response_model=PengumumanResponse)
+def update_pengumuman(
+    id: int,
+    updated: PengumumanBase,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=403, detail="Hanya admin yang bisa mengedit pengumuman"
+        )
+
+    pengumuman = db.query(models.Pengumuman).filter(models.Pengumuman.id == id).first()
+    if not pengumuman:
+        raise HTTPException(status_code=404, detail="pengumuman tidak ditemukan")
+
+    for key, value in updated.dict().items():
+        setattr(pengumuman, key, value)
+
+    db.commit()
+    db.refresh(pengumuman)
+    return pengumuman
+
+
+# Fungsi untuk menghapus Pengumuman
+@app.delete("/pengumuman/{id}")
+def delete_pengumuman(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=403, detail="Hanya admin yang bisa menghapus pengumuman"
+        )
+
+    pengumuman = db.query(models.Pengumuman).filter(models.Pengumuman.id == id).first()
+    if not pengumuman:
+        raise HTTPException(status_code=404, detail="pengumuman tidak ditemukan")
+
+    db.delete(pengumuman)
+    db.commit()
+    return {"message": "pengumuman berhasil dihapus"}
 
 
 # Fungsi untuk melakukan prediksi

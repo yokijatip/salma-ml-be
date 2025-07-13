@@ -59,3 +59,23 @@ class Kegiatan(Base):
     # Foreign key untuk mengaitkan dengan User (admin)
     admin_id = Column(Integer, ForeignKey("users.id"))
     admin = relationship("User")  # Relasi ke User sebagai admin kegiatan
+
+
+# Table untuk menyimpan data pengumuman
+
+class Pengumuman(Base):
+    __tablename__ = "pengumuman"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nama_pengumuman = Column(String, index=True)
+    deskripsi = Column(String)
+    tanggal = Column(String)  # Format YYYY-MM-DD
+    kelas = Column(String)
+    waktu_mulai = Column(String)  # Format HH:MM
+    waktu_selesai = Column(String)  # Format HH:MM
+    lokasi = Column(String)
+    fotoPengumuman = Column(String)  # URL atau path ke foto pengumuman
+
+    # Foreign key untuk mengaitkan dengan User (admin)
+    admin_id = Column(Integer, ForeignKey("users.id"))
+    admin = relationship("User")  # Relasi ke User sebagai admin Pengumuman
