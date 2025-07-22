@@ -47,6 +47,10 @@ class UserResponse(BaseModel):
 class StudentBase(BaseModel):
     name: str
     kelas: str
+    tanggal_lahir: str  # Format YYYY-MM-DD
+    jenis_kelamin: str  # Laki-laki atau Perempuan
+    no_hp: str
+    nama_orang_tua: str
     al_quran_iqro: int
     hafalan_surat_pendek: int
     hafalan_doa: int
@@ -308,6 +312,15 @@ def delete_student(id: int, db: Session = Depends(get_db), current_user: models.
     db.delete(student)
     db.commit()
     return {"message": "Data siswa berhasil dihapus"}
+
+# Fungsi untuk menghitung jumlah siswa
+@app.get("/students/count")
+def get_students_count(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Hanya admin yang bisa melihat jumlah siswa")
+    
+    total_students = db.query(models.Student).count()
+    return {"total_students": total_students}
 
 # Fungsi untuk membuat kegiatan
 @app.post("/kegiatan", response_model=KegiatanResponse)

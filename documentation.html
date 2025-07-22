@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Sistem ML TPQ - SALMA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+        }
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+        }
+        .btn-generate {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        .highlight {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        .category-box {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        .bb { background-color: #e74c3c; }
+        .mb { background-color: #f39c12; }
+        .bsh { background-color: #27ae60; }
+        .bsb { background-color: #2980b9; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .tech-item {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>SISTEM EVALUASI PERFORMA SISWA TPQ BERBASIS MACHINE LEARNING</h1>
+        
+        <button class="btn-generate" onclick="generatePDF()">📄 Generate PDF Dokumentasi</button>
+        
+        <h2>1. PENDAHULUAN</h2>
+        <p>Sistem SALMA (Sistem Analisis Learning Machine untuk Anak) adalah aplikasi berbasis web yang menggunakan teknologi Machine Learning untuk mengevaluasi dan memprediksi performa siswa di lembaga pendidikan TPQ (Taman Pendidikan Al-Quran).</p>
+        
+        <div class="highlight">
+            <strong>Tujuan Sistem:</strong>
+            <ul>
+                <li>Otomatisasi evaluasi performa siswa berdasarkan 12 mata pelajaran</li>
+                <li>Prediksi kategori pencapaian siswa secara akurat</li>
+                <li>Membantu admin dan orang tua memantau perkembangan siswa</li>
+                <li>Menyediakan data analitik untuk pengambilan keputusan pendidikan</li>
+            </ul>
+        </div>
+
+        <h2>2. TEKNOLOGI YANG DIGUNAKAN</h2>
+        <div class="tech-stack">
+            <span class="tech-item">Python 3.10</span>
+            <span class="tech-item">FastAPI</span>
+            <span class="tech-item">Scikit-Learn</span>
+            <span class="tech-item">Random Forest</span>
+            <span class="tech-item">SQLite</span>
+            <span class="tech-item">SQLAlchemy</span>
+            <span class="tech-item">JWT Authentication</span>
+            <span class="tech-item">Pandas</span>
+        </div>
+
+        <h2>3. ALGORITMA MACHINE LEARNING</h2>
+        <h3>3.1 Random Forest Classifier</h3>
+        <p>Sistem menggunakan algoritma <strong>Random Forest Classifier</strong> dengan alasan:</p>
+        <ul>
+            <li><strong>Akurasi Tinggi:</strong> Menggabungkan multiple decision trees untuk hasil yang lebih akurat</li>
+            <li><strong>Robust terhadap Overfitting:</strong> Mengurangi risiko overfitting dibanding single decision tree</li>
+            <li><strong>Feature Importance:</strong> Dapat menunjukkan mata pelajaran mana yang paling berpengaruh</li>
+            <li><strong>Handling Missing Values:</strong> Dapat menangani data yang tidak lengkap</li>
+        </ul>
+
+        <h3>3.2 Parameter Model</h3>
+        <div class="highlight">
+            <ul>
+                <li><strong>n_estimators:</strong> 100 (jumlah pohon dalam forest)</li>
+                <li><strong>max_depth:</strong> 10 (kedalaman maksimum pohon)</li>
+                <li><strong>min_samples_split:</strong> 5 (minimum sampel untuk split)</li>
+                <li><strong>min_samples_leaf:</strong> 2 (minimum sampel di leaf node)</li>
+                <li><strong>random_state:</strong> 42 (untuk reproducibility)</li>
+            </ul>
+        </div>
+
+        <h2>4. FITUR INPUT SISTEM</h2>
+        <p>Sistem mengevaluasi siswa berdasarkan <strong>12 mata pelajaran</strong> dengan skala nilai 0-100:</p>
+        
+        <table>
+            <tr>
+                <th>No</th>
+                <th>Mata Pelajaran</th>
+                <th>Deskripsi</th>
+            </tr>
+            <tr><td>1</td><td>Al-Quran/Iqro</td><td>Kemampuan membaca Al-Quran dan Iqro</td></tr>
+            <tr><td>2</td><td>Hafalan Surat Pendek</td><td>Hafalan surat-surat pendek dalam Al-Quran</td></tr>
+            <tr><td>3</td><td>Hafalan Doa</td><td>Hafalan doa-doa harian</td></tr>
+            <tr><td>4</td><td>Hafalan Ayat Pilihan</td><td>Hafalan ayat-ayat pilihan</td></tr>
+            <tr><td>5</td><td>Bahasa Arab</td><td>Kemampuan bahasa Arab dasar</td></tr>
+            <tr><td>6</td><td>Bahasa Inggris</td><td>Kemampuan bahasa Inggris dasar</td></tr>
+            <tr><td>7</td><td>Khat/Menulis</td><td>Kemampuan menulis kaligrafi Arab</td></tr>
+            <tr><td>8</td><td>Menggambar/Mewarnai</td><td>Kreativitas seni dan motorik halus</td></tr>
+            <tr><td>9</td><td>Jasmani/Kesehatan</td><td>Aktivitas fisik dan kesehatan</td></tr>
+            <tr><td>10</td><td>Kreativitas/Keaktifan</td><td>Partisipasi dan kreativitas siswa</td></tr>
+            <tr><td>11</td><td>Ulumul Qur'an</td><td>Pengetahuan tentang ilmu Al-Quran</td></tr>
+            <tr><td>12</td><td>Kemampuan Berbahasa</td><td>Kemampuan komunikasi verbal</td></tr>
+        </table>
+
+        <h2>5. KATEGORI OUTPUT PREDIKSI</h2>
+        <p>Sistem mengklasifikasikan performa siswa ke dalam 4 kategori:</p>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <div class="category-box bb">BB - Belum Berkembang (< 60)</div>
+            <div class="category-box mb">MB - Mulai Berkembang (60-69)</div>
+            <div class="category-box bsh">BSH - Berkembang Sesuai Harapan (70-84)</div>
+            <div class="category-box bsb">BSB - Berkembang Sangat Baik (≥ 85)</div>
+        </div>
+
+        <h2>6. ARSITEKTUR SISTEM</h2>
+        <h3>6.1 Backend API</h3>
+        <ul>
+            <li><strong>Authentication:</strong> JWT-based dengan role admin dan orang_tua</li>
+            <li><strong>Database:</strong> SQLite dengan SQLAlchemy ORM</li>
+            <li><strong>ML Model:</strong> Pickle serialization untuk model persistence</li>
+            <li><strong>API Documentation:</strong> Swagger UI otomatis dari FastAPI</li>
+        </ul>
+
+        <h3>6.2 Endpoint Utama</h3>
+        <table>
+            <tr>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>Fungsi</th>
+            </tr>
+            <tr><td>/register</td><td>POST</td><td>Registrasi user baru</td></tr>
+            <tr><td>/login</td><td>POST</td><td>Login dan mendapat JWT token</td></tr>
+            <tr><td>/students</td><td>GET/POST</td><td>CRUD data siswa</td></tr>
+            <tr><td>/students/count</td><td>GET</td><td>Menghitung jumlah siswa</td></tr>
+            <tr><td>/predict</td><td>POST</td><td>Prediksi performa siswa</td></tr>
+            <tr><td>/kegiatan</td><td>GET/POST</td><td>CRUD data kegiatan</td></tr>
+            <tr><td>/pengumuman</td><td>GET/POST</td><td>CRUD data pengumuman</td></tr>
+        </table>
+
+        <h2>7. METODOLOGI PENGEMBANGAN</h2>
+        <h3>7.1 Data Collection</h3>
+        <p>Dataset terdiri dari 500 record siswa TPQ dengan 12 fitur nilai mata pelajaran dan target kategori yang sudah dilabeli berdasarkan rata-rata nilai.</p>
+
+        <h3>7.2 Data Preprocessing</h3>
+        <ul>
+            <li>Validasi range nilai (0-100)</li>
+            <li>Handling missing values</li>
+            <li>Feature scaling (opsional untuk Random Forest)</li>
+            <li>Stratified train-test split (80:20)</li>
+        </ul>
+
+        <h3>7.3 Model Training</h3>
+        <ul>
+            <li>Cross-validation untuk parameter tuning</li>
+            <li>Feature importance analysis</li>
+            <li>Model evaluation dengan confusion matrix</li>
+            <li>Accuracy, precision, recall, dan F1-score metrics</li>
+        </ul>
+
+        <h2>8. EVALUASI MODEL</h2>
+        <div class="highlight">
+            <p><strong>Metrik Evaluasi:</strong></p>
+            <ul>
+                <li><strong>Accuracy:</strong> Persentase prediksi yang benar</li>
+                <li><strong>Precision:</strong> Ketepatan prediksi per kategori</li>
+                <li><strong>Recall:</strong> Kemampuan mendeteksi semua instance per kategori</li>
+                <li><strong>F1-Score:</strong> Harmonic mean dari precision dan recall</li>
+                <li><strong>Confusion Matrix:</strong> Visualisasi performa klasifikasi</li>
+            </ul>
+        </div>
+
+        <h2>9. KEAMANAN SISTEM</h2>
+        <ul>
+            <li><strong>JWT Authentication:</strong> Token-based authentication</li>
+            <li><strong>Role-based Access:</strong> Admin dan orang_tua memiliki akses berbeda</li>
+            <li><strong>Password Hashing:</strong> Bcrypt untuk enkripsi password</li>
+            <li><strong>Input Validation:</strong> Pydantic models untuk validasi data</li>
+        </ul>
+
+        <h2>10. DEPLOYMENT</h2>
+        <p>Sistem dapat di-deploy menggunakan:</p>
+        <ul>
+            <li><strong>Railway:</strong> Platform cloud dengan konfigurasi railway.json</li>
+            <li><strong>Heroku:</strong> Menggunakan Procfile</li>
+            <li><strong>Docker:</strong> Containerization untuk portabilitas</li>
+            <li><strong>Local Server:</strong> Uvicorn ASGI server</li>
+        </ul>
+
+        <h2>11. KESIMPULAN</h2>
+        <p>Sistem SALMA berhasil mengimplementasikan Machine Learning untuk evaluasi performa siswa TPQ dengan akurasi tinggi. Penggunaan Random Forest Classifier terbukti efektif untuk klasifikasi multi-class dengan dataset yang relatif kecil. Sistem ini dapat membantu institusi pendidikan dalam monitoring dan evaluasi siswa secara otomatis dan objektif.</p>
+
+        <div class="highlight">
+            <strong>Kontribusi Utama:</strong>
+            <ul>
+                <li>Otomatisasi evaluasi performa siswa TPQ</li>
+                <li>Implementasi ML dengan akurasi tinggi</li>
+                <li>Sistem manajemen data terintegrasi</li>
+                <li>API yang scalable dan secure</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Set font
+            doc.setFont("helvetica");
+            
+            // Title
+            doc.setFontSize(16);
+            doc.setFont("helvetica", "bold");
+            doc.text("SISTEM EVALUASI PERFORMA SISWA TPQ", 20, 20);
+            doc.text("BERBASIS MACHINE LEARNING", 20, 30);
+            
+            // Subtitle
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "normal");
+            doc.text("Dokumentasi Teknis - Sistem SALMA", 20, 45);
+            
+            // Content sections
+            let yPos = 60;
+            
+            // 1. Pendahuluan
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("1. PENDAHULUAN", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const introText = "Sistem SALMA adalah aplikasi berbasis web yang menggunakan teknologi Machine Learning untuk mengevaluasi dan memprediksi performa siswa di lembaga pendidikan TPQ.";
+            const splitIntro = doc.splitTextToSize(introText, 170);
+            doc.text(splitIntro, 20, yPos);
+            yPos += splitIntro.length * 5 + 10;
+            
+            // 2. Teknologi
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("2. TEKNOLOGI YANG DIGUNAKAN", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const techList = [
+                "• Python 3.10 - Bahasa pemrograman utama",
+                "• FastAPI - Web framework untuk REST API",
+                "• Scikit-Learn - Library Machine Learning",
+                "• Random Forest - Algoritma klasifikasi",
+                "• SQLite + SQLAlchemy - Database dan ORM",
+                "• JWT Authentication - Sistem keamanan"
+            ];
+            
+            techList.forEach(item => {
+                doc.text(item, 20, yPos);
+                yPos += 6;
+            });
+            yPos += 10;
+            
+            // 3. Algoritma ML
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("3. ALGORITMA MACHINE LEARNING", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text("Random Forest Classifier", 20, yPos);
+            yPos += 8;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const mlText = "Sistem menggunakan Random Forest Classifier karena akurasi tinggi, robust terhadap overfitting, dan dapat menunjukkan feature importance.";
+            const splitML = doc.splitTextToSize(mlText, 170);
+            doc.text(splitML, 20, yPos);
+            yPos += splitML.length * 5 + 10;
+            
+            // 4. Input Features
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("4. FITUR INPUT SISTEM", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("Sistem mengevaluasi 12 mata pelajaran dengan skala 0-100:", 20, yPos);
+            yPos += 8;
+            
+            const subjects = [
+                "1. Al-Quran/Iqro", "2. Hafalan Surat Pendek", "3. Hafalan Doa",
+                "4. Hafalan Ayat Pilihan", "5. Bahasa Arab", "6. Bahasa Inggris",
+                "7. Khat/Menulis", "8. Menggambar/Mewarnai", "9. Jasmani/Kesehatan",
+                "10. Kreativitas/Keaktifan", "11. Ulumul Qur'an", "12. Kemampuan Berbahasa"
+            ];
+            
+            // Split into two columns
+            for(let i = 0; i < subjects.length; i += 2) {
+                doc.text(subjects[i], 20, yPos);
+                if(subjects[i + 1]) {
+                    doc.text(subjects[i + 1], 110, yPos);
+                }
+                yPos += 6;
+            }
+            yPos += 10;
+            
+            // Add new page if needed
+            if(yPos > 250) {
+                doc.addPage();
+                yPos = 20;
+            }
+            
+            // 5. Output Categories
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("5. KATEGORI OUTPUT PREDIKSI", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const categories = [
+                "• BB - Belum Berkembang (< 60)",
+                "• MB - Mulai Berkembang (60-69)",
+                "• BSH - Berkembang Sesuai Harapan (70-84)",
+                "• BSB - Berkembang Sangat Baik (≥ 85)"
+            ];
+            
+            categories.forEach(cat => {
+                doc.text(cat, 20, yPos);
+                yPos += 6;
+            });
+            yPos += 10;
+            
+            // 6. API Endpoints
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("6. ENDPOINT UTAMA", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const endpoints = [
+                "POST /register - Registrasi user baru",
+                "POST /login - Login dan mendapat JWT token",
+                "GET/POST /students - CRUD data siswa",
+                "GET /students/count - Menghitung jumlah siswa",
+                "POST /predict - Prediksi performa siswa",
+                "GET/POST /kegiatan - CRUD data kegiatan",
+                "GET/POST /pengumuman - CRUD data pengumuman"
+            ];
+            
+            endpoints.forEach(endpoint => {
+                doc.text(endpoint, 20, yPos);
+                yPos += 6;
+            });
+            yPos += 10;
+            
+            // 7. Conclusion
+            doc.setFontSize(14);
+            doc.setFont("helvetica", "bold");
+            doc.text("7. KESIMPULAN", 20, yPos);
+            yPos += 10;
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            const conclusion = "Sistem SALMA berhasil mengimplementasikan Machine Learning untuk evaluasi performa siswa TPQ dengan akurasi tinggi menggunakan Random Forest Classifier.";
+            const splitConclusion = doc.splitTextToSize(conclusion, 170);
+            doc.text(splitConclusion, 20, yPos);
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setFont("helvetica", "italic");
+            doc.text("Generated by SALMA Documentation System", 20, 280);
+            doc.text("© 2025 - Sistem Evaluasi Performa Siswa TPQ", 20, 285);
+            
+            // Save PDF
+            doc.save("SALMA_ML_Documentation.pdf");
+            
+            alert("PDF berhasil di-generate! File tersimpan sebagai 'SALMA_ML_Documentation.pdf'");
+        }
+    </script>
+</body>
+</html>
