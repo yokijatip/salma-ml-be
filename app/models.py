@@ -18,6 +18,10 @@ class Student(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     kelas = Column(String)
+    tanggal_lahir = Column(String)  # Format YYYY-MM-DD
+    jenis_kelamin = Column(String)  # Laki-laki atau Perempuan
+    no_hp = Column(String)  # Nomor handphone
+    nama_orang_tua = Column(String)  # Nama orang tua
     
     # 12 Mata Pelajaran
     al_quran_iqro = Column(Integer)
