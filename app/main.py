@@ -261,6 +261,15 @@ def create_student(student: StudentCreate, db: Session = Depends(get_db), curren
 def get_students(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     return db.query(models.Student).all()
 
+# Fungsi untuk menghitung jumlah siswa (HARUS SEBELUM /students/{id})
+@app.get("/students/count")
+def get_students_count(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Hanya admin yang bisa melihat jumlah siswa")
+    
+    total_students = db.query(models.Student).count()
+    return {"total_students": total_students}
+
 # Fungsi untuk mengambil data siswa berdasarkan ID
 @app.get("/students/{id}", response_model=StudentResponse)
 def get_student_by_id(id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
@@ -313,14 +322,6 @@ def delete_student(id: int, db: Session = Depends(get_db), current_user: models.
     db.commit()
     return {"message": "Data siswa berhasil dihapus"}
 
-# Fungsi untuk menghitung jumlah siswa
-@app.get("/students/count")
-def get_students_count(db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    if current_user.role != "admin":
-        raise HTTPException(status_code=403, detail="Hanya admin yang bisa melihat jumlah siswa")
-    
-    total_students = db.query(models.Student).count()
-    return {"total_students": total_students}
 
 # Fungsi untuk membuat kegiatan
 @app.post("/kegiatan", response_model=KegiatanResponse)
